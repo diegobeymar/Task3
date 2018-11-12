@@ -1,36 +1,18 @@
-from sklearn.metrics import r2_score
-from sklearn import preprocessing
-from statistics import mean
-from csv import reader
 import numpy as np
-import csv
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import svm
-
 import biosppy.signals.ecg as ecg
-import biosppy as bs
-import csv
-import utils
 
 # Minimum number of observations for an sample
 selected_threshold = 8600
 
 # Undersample data
-utils.save_undersampled_data(selected_threshold)
-
-# print(bs.signals.tools.find_extrema(undersampled_data[0]))
-exit()
+# utils.save_undersampled_data(selected_threshold)
 
 # Loadinf X_train.csv into panda Dataframe
-X_train = np.genfromtxt("data/X_train.csv", delimiter=",", skip_header=1)
-X_train = np.delete(X_train, 0, 1)
-X_train = X_train.astype(np.float)
-df_Xtrain = pd.DataFrame(data=X_train)
+df_Xtrain = pd.read_csv("data/X_train_undersampled.csv", delimiter=",", index_col="id")
+
+print(ecg.christov_segmenter(df_Xtrain.iloc[0], sampling_rate=300))
+exit()
 
 # Loading y_train.csv into panda Dataframe
 y_train = np.genfromtxt("data/y_train.csv", delimiter=",", skip_header=1)
