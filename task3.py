@@ -13,6 +13,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 
 import biosppy.signals.ecg as ecg
+import biosppy as bs
+import csv
+import utils
+
+# Minimum number of observations for an sample
+selected_threshold = 8600
+
+# Undersample data
+utils.save_undersampled_data(selected_threshold)
+
+# print(bs.signals.tools.find_extrema(undersampled_data[0]))
+exit()
 
 # Loadinf X_train.csv into panda Dataframe
 X_train = np.genfromtxt("data/X_train.csv", delimiter=",", skip_header=1)
