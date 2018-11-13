@@ -6,12 +6,31 @@ import biosppy.signals.ecg as ecg
 selected_threshold = 8600
 
 # Undersample data
-# utils.save_undersampled_data(selected_threshold)
+#utils.save_undersampled_data(selected_threshold)
 
 # Loadinf X_train.csv into panda Dataframe
 df_Xtrain = pd.read_csv("data/X_train_undersampled.csv", delimiter=",", index_col="id")
 
-print(ecg.christov_segmenter(df_Xtrain.iloc[0], sampling_rate=300))
+signal = df_Xtrain.values[0]
+
+
+ts, filtered, rpeaks, templates_ts, templates, heart_rate_ts, heart_rate = ecg.ecg(signal, 300, True)
+
+min_bpm = min(heart_rate)
+max_bpm = max(heart_rate)
+avg_bpm = sum(heart_rate)/len(heart_rate)
+std_bpm = np.std(heart_rate)
+
+
+print("min = ",min_bpm," max = ",max_bpm," avg = ",avg_bpm," std = ",std_bpm)
+
+
+#print("TEMPLATES")
+#print(templates)
+#print("TEMPLATES TS")
+#print(templates_ts)
+#print("HEART RATE")
+#print(heart_rate)
 exit()
 
 # Loading y_train.csv into panda Dataframe
