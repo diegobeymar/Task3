@@ -11,14 +11,13 @@ selected_threshold = 8600
 # Loadinf X_train.csv into panda Dataframe
 df_Xtrain = pd.read_csv("data/X_train_undersampled.csv", delimiter=",", index_col="id", dtype=int)
 extracted_features = []
-i = 0
-for signal in df_Xtrain.values:
-    if len(ecg.christov_segmenter(signal, 300)[0]) == 0:
-        print(i)
-    i += 1
-exit()
-for signal in df_Xtrain.values:
+
+indices = []
+for signal, index in zip(df_Xtrain.values, df_Xtrain.index):
     ts, filtered, r_peaks_indices, templates_ts, templates, heart_rate_ts, heart_rate = ecg.ecg(signal, 300, False)
+    if len(heart_rate) == 0:
+        continue
+    indices.append(index)
     # R-peaks
     r_peaks_count = len(r_peaks_indices)
     r_peaks = list(map(lambda i: signal[i], r_peaks_indices))
@@ -36,10 +35,10 @@ for signal in df_Xtrain.values:
 
 # DataFrame creation
 df = pd.DataFrame(np.array(extracted_features),
-                  index=df_Xtrain["id"],
-                  columns=["r_peaks_count", "r_peaks_frequency", "r_peaks_max", "r_peaks_min",
+                  index=indices,
+                  columns=["id", "r_peaks_count", "r_peaks_frequency", "r_peaks_max", "r_peaks_min",
                            "r_peaks_avg", "bpm_avg", "bpm_std"])
-df.to_csv("data/X_train_final")
+df.to_csv("data/X_train_final.csv")
 
 exit()
 
